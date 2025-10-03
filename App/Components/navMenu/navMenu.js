@@ -23,16 +23,16 @@ export class NavMenu extends HTMLElement{
                     <a class="nav-link" href="#" data-verocultar='["ct"]'>Branches</a>
                   </li>
                   <li class="nav-item">
-                    <a class="nav-link" href="#" data-verocultar='["cmp"]'>Companies (WIP)</a>
+                    <a class="nav-link" href="#" data-verocultar='["cmp"]'>Companies</a>
                   </li>
                   <li class="nav-item">
-                    <a class="nav-link" href="#" data-verocultar='["cy"]'>Cities (WIP)</a>
+                    <a class="nav-link" href="#" data-verocultar='["cy"]'>Cities</a>
                   </li>
                   <li class="nav-item">
-                    <a class="nav-link" href="#" data-verocultar='["r"]'>Regions (WIP)</a>
+                    <a class="nav-link" href="#" data-verocultar='["r"]'>Regions</a>
                   </li>
                   <li class="nav-item">
-                    <a class="nav-link" href="#" data-verocultar='["co"]'>Countries (WIP)</a>
+                    <a class="nav-link" href="#" data-verocultar='["co"]'>Countries</a>
                   </li>
                   <li class="nav-item">
                     <a class="nav-link disabled" aria-disabled="true">Disabled</a>
@@ -55,16 +55,16 @@ export class NavMenu extends HTMLElement{
                   mainContent.innerHTML="<branches-component></branches-component>"
                   break;
                 case 'cmp':
-                  mainContent.innerHTML="<lst-companies></lst-companies>";
+                  mainContent.innerHTML="<company-component></company-component>";
                   break;
                 case 'cy':
-                  mainContent.innerHTML="<p>city-component</p>";
+                  mainContent.innerHTML="<city-component></city-component>";
                   break;
                 case 'r':
-                  mainContent.innerHTML="<p>region-component</p>";
+                  mainContent.innerHTML="<region-component></region-component>";
                   break;
                 case 'co':
-                  mainContent.innerHTML="<p>country-component</p>";
+                  mainContent.innerHTML="<country-component></country-component>";
                   break;
                 }
               e.stopImmediatePropagation();
