@@ -1,0 +1,54 @@
+{
+  "countries": [
+    {
+      "id": 1,
+      "name": "Colombia"
+    }
+  ],
+  "regions": [
+    {
+      "id": 10,
+      "name": "Andina",
+      "CountryId": 1
+    }
+  ],
+  "cities": [
+    {
+      "id": 101,
+      "name": "Bogotá",
+      "RegionId": 10
+    }
+  ],
+  "companies": [
+    {
+      "id": 500,
+      "name": "CampusLands Inc.",
+      "UKNiu": "12345-ABC",
+      "address": "Calle Falsa 123",
+      "email": "info@campuslands.com",
+      "CityId": 101
+    }
+  ],
+  "branches": [
+    {
+      "id": 1,
+      "numberCommercial": "CL-BOG-01",
+      "address": "Avenida Siempre Viva 742",
+      "email": "sede.principal@campus.com",
+      "contact_name": "Homero Simpson",
+      "phone": "3001234567",
+      "cityID": 101,
+      "companyID": 500
+    }
+  ],
+  "contact": [
+    {
+      "id": 1,
+      "nombreContacto": "Juan",
+      "apellidoContacto": "Perez",
+      "nroCelular": "3109876543",
+      "emailContacto": "juan.perez@example.com",
+      "nroResidencia": "Casa 101"
+    }
+  ]
+}

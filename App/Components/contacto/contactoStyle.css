@@ -1,0 +1,4 @@
+.disabled-btn {
+  background-color: black;
+  pointer-events: none;
+}
