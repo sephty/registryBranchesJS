@@ -33,17 +33,24 @@ export class RegionComponent extends HTMLElement {
 
   handleTabClick(e) {
       e.preventDefault();
-      this.switchToView(e.target.dataset.view);
+      const viewId = e.target.dataset.view;
+      this.switchToView(viewId);
   }
   
   switchToView(viewId, refreshList = false) {
       this.querySelectorAll('.nav-link').forEach(link => link.classList.remove('active'));
       this.querySelectorAll('div[id]').forEach(div => div.style.display = 'none');
-      document.querySelector(`[data-view="${viewId}"]`).classList.add('active');
-      document.querySelector(`#${viewId}`).style.display = 'block';
+
+      const activeLink = this.querySelector(`[data-view="${viewId}"]`);
+      if (activeLink) activeLink.classList.add('active');
+      const activeDiv = this.querySelector(`#${viewId}`);
+      if (activeDiv) activeDiv.style.display = 'block';
 
       if (refreshList) {
-          this.querySelector('lst-regions').fetchRegions();
+          const listComponent = this.querySelector('lst-regions');
+          if (listComponent && typeof listComponent.fetchRegions === 'function') {
+              listComponent.fetchRegions();
+          }
       }
   }
   
@@ -52,8 +59,11 @@ export class RegionComponent extends HTMLElement {
   }
 
   handleEditRegion(event) {
+    const regionToEdit = event.detail;
     this.switchToView('regregions');
-    this.querySelector('reg-regions').loadDataForEdit(event.detail);
+    const regComponent = this.querySelector('reg-regions');
+    regComponent.loadDataForEdit(regionToEdit);
   }
 }
+
 customElements.define("region-component", RegionComponent);

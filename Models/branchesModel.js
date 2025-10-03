@@ -1,12 +1,11 @@
-const branchesModel = {
+export const branchesModel = {
   numberCommercial: '',
   address: '',
   email: '',
   contact_name: '',
   phone: '',
-  cityID: '',
-  companyID: ''
+  cityID: null,
+  companyID: null,
 };
-
 
 export default branchesModel;

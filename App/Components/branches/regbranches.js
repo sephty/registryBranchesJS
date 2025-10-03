@@ -1,131 +1,208 @@
-import { getbranches, deletebranches, postbranches, patchbranches } from '../../../Apis/branch/branchApi.js';
-import branchesModel from '../../../Models/branchesModel.js';
+import { postbranches, patchbranches, deletebranches } from '../../../Apis/branch/branchApi.js';
+import { branchesModel } from '../../../Models/branchesModel.js';
 
-export class lstbranches extends HTMLElement {
+export class RegBranches extends HTMLElement {
   constructor() {
     super();
-    this.branches = [];
     this.render();
-    this.fetchbranches();
-  }
-
-  async fetchbranches() {
-    try {
-      const branches = await getbranches();
-      this.branches = Array.isArray(branches) ? branches : [];
-      this.renderbranches();
-    } catch (error) {
-      console.error('Error fetching branches:', error);
-    }
+    this.saveData();
+    this.enabledBtns();
+    this.eventoEditar();
+    this.eventoEliminar();
+    this.disableFrm(true);
   }
 
   render() {
     this.innerHTML = /* html */ `
       <style rel="stylesheet">
-      @import "./App/Components/branches/brancheStyle.css";
+        @import "./App/Components/branches/brancheStyle.css";
       </style>
       <div class="card mt-3">
         <div class="card-header">
-          Listado de branches
-          <div class="float-end">
-            <!-- REMOVED: Add New Branch Button -->
-            <button class="btn btn-success btn-sm ms-2" id="syncDataBtn">Refresh Data</button>
-          </div>
+          Registro de Sucursales <span class="badge rounded-pill text-bg-primary" id="idView"></span>
         </div>
         <div class="card-body">
-          <table class="table table-hover">
-            <thead>
-              <tr>
-                <th>Numero Comercial</th>
-                <th>Direccion</th>
-                <th>Email</th>
-                <th>Nombre Contacto</th>
-                <th>Telefono</th>
-                <th>Ciudad ID</th>
-                <th>Compañia ID</th>
-                <th>Acciones</th> 
-              </tr>
-            </thead>
-            <tbody id="branch-list"></tbody>
-          </table>
+          <form id="frmDataBranch">
+            <div class="row">
+              <div class="col">
+                <label for="numberCommercial" class="form-label">Numero Comercial</label>
+                <input type="text" class="form-control" id="numberCommercial" name="numberCommercial">
+              </div>
+              <div class="col">
+                <label for="address" class="form-label">Direccion</label>
+                <input type="text" class="form-control" id="address" name="address">
+              </div>
+            </div>
+            <div class="row">
+              <div class="col">
+                <label for="email" class="form-label">Email</label>
+                <input type="text" class="form-control" id="email" name="email">
+              </div>
+              <div class="col">
+                <label for="contact_name" class="form-label">Nombre Contacto</label>
+                <input type="text" class="form-control" id="contact_name" name="contact_name">
+              </div>
+              <div class="col">
+                <label for="phone" class="form-label">Telefono</label>
+                <input type="text" class="form-control" id="phone" name="phone">
+              </div>
+            </div>
+            <div class="row">
+              <div class="col">
+                <label for="cityID" class="form-label">Ciudad ID</label>
+                <input type="text" class="form-control" id="cityID" name="cityID">
+              </div>
+              <div class="col">
+                <label for="companyID" class="form-label">Compañia ID</label>
+                <input type="text" class="form-control" id="companyID" name="companyID">
+              </div>
+            </div>
+            <div class="row mt-3">
+              <div class="col">
+                <div class="container mt-4 text-center">
+                  <a href="#" class="btn btn-primary" id="btnNuevo" data-ed='[["#btnGuardar","#btnCancelar"],["#btnNuevo","#btnEditar","#btnEliminar"]]'>Nuevo</a>
+                  <a href="#" class="btn btn-dark" id="btnCancelar" data-ed='[["#btnNuevo"],["#btnGuardar","#btnEditar","#btnEliminar","#btnCancelar"]]'>Cancelar</a>
+                  <a href="#" class="btn btn-success" id="btnGuardar" data-ed='[["#btnEditar","#btnCancelar","#btnNuevo","#btnEliminar"],["#btnGuardar"]]'>Guardar</a>
+                  <a href="#" class="btn btn-warning" id="btnEditar" data-ed='[[],[]]'>Editar</a>
+                  <a href="#" class="btn btn-danger" id="btnEliminar" data-ed='[["#btnNuevo"],["#btnGuardar","#btnEditar","#btnEliminar","#btnCancelar"]]'>Eliminar</a>
+                </div>
+              </div>
+            </div>
+          </form>
         </div>
       </div>
     `;
-    this.querySelector('#syncDataBtn').addEventListener('click', this.fetchbranches.bind(this)); 
-  }
-
-  renderbranches() {
-    const tbody = this.querySelector('#branch-list');
-    if (!tbody) return;
-    tbody.innerHTML = this.branches.map(branch => `
-      <tr data-id="${branch.id || ''}">
-        <td>${branch.numberCommercial || ''}</td>
-        <td>${branch.address || ''}</td>
-        <td>${branch.email || ''}</td>
-        <td>${branch.contact_name || ''}</td>
-        <td>${branch.phone || ''}</td>
-        <td>${branch.cityID || ''}</td>
-        <td>${branch.companyID || ''}</td>
-        <td>
-          <button class="btn btn-warning btn-sm edit-branch-btn" data-id="${branch.id || ''}">Edit</button>
-          <button class="btn btn-danger btn-sm delete-branch-btn" data-id="${branch.id || ''}">Delete</button>
-        </td>
-      </tr>
-    `).join('');
-
-    this.querySelectorAll('.edit-branch-btn').forEach(button => {
-        button.addEventListener('click', this.handleEditClick.bind(this));
+    this.querySelector("#btnNuevo").addEventListener("click", (e) => {
+      this.ctrlBtn(e.target.dataset.ed);
+      this.resetIdView();
+      this.disableFrm(false);
     });
-    this.querySelectorAll('.delete-branch-btn').forEach(button => {
-        button.addEventListener('click', this.handleDeleteClick.bind(this));
+    this.querySelector("#btnCancelar").addEventListener("click", (e) => {
+      this.ctrlBtn(e.target.dataset.ed);
+      this.resetIdView();
+      this.disableFrm(true);
     });
   }
 
-
-  async syncData() {
-    console.log('Refreshing data...');
-    await this.fetchbranches();
-  }
-  
-
-
-  handleEditClick(event) {
-    const branchId = event.target.dataset.id;
-    const branchToEdit = this.branches.find(branch => String(branch.id) === String(branchId));
-    if (branchToEdit) {
-      this.dispatchEvent(new CustomEvent('editBranch', {
-        bubbles: true,
-        composed: true,
-        detail: branchToEdit
-      }));
-    } else {
-      console.warn('Branch not found for editing:', branchId);
-    }
+  resetIdView = () => {
+    const idView = this.querySelector('#idView');
+    idView.innerHTML = '';
   }
 
-  async handleDeleteClick(event) { 
-    const branchId = event.target.dataset.id;
-    if (confirm(`Are you sure you want to delete branch with ID: ${branchId}?`)) {
-        
-        try {
-            const response = await deletebranches(branchId);
-            if (response.ok) {
-                this.branches = this.branches.filter(b => String(b.id) !== String(branchId));
-                this.renderbranches();
-                console.log('Deleted branch from API:', branchId);
-                this.dispatchEvent(new CustomEvent('branchDeleted', { bubbles: true, composed: true, detail: { id: branchId } }));
-            } else {
-                console.error('Failed to delete branch:', branchId, await response.text());
-                alert('Failed to delete branch on server.');
-            }
-        } catch (error) {
-            console.error('Error deleting branch:', error);
-            alert('Error deleting branch.');
+  eventoEditar = () => {
+    this.querySelector('#btnEditar').addEventListener("click", (e) => {
+      this.editData();
+      e.stopImmediatePropagation();
+      e.preventDefault();
+    });
+  }
+
+  eventoEliminar = () => {
+    this.querySelector('#btnEliminar').addEventListener("click", (e) => {
+      this.delData(e);
+      e.stopImmediatePropagation();
+      e.preventDefault();
+    });
+  }
+
+  ctrlBtn = (e) => {
+    let data = JSON.parse(e);
+    data[0].forEach(boton => {
+      let btnActual = this.querySelector(boton);
+      btnActual.classList.remove('disabled');
+    });
+    data[1].forEach(boton => {
+      let btnActual = this.querySelector(boton);
+      btnActual.classList.add('disabled');
+    });
+  }
+
+  enabledBtns = () => {
+    this.querySelectorAll(".btn").forEach((val) => {
+      this.ctrlBtn(val.dataset.ed);
+    });
+  }
+
+  editData = () => {
+    const frmRegistro = this.querySelector('#frmDataBranch');
+    const datos = Object.fromEntries(new FormData(frmRegistro).entries());
+    const idView = this.querySelector('#idView');
+    let id = idView.textContent;
+    patchbranches(id, datos)
+      .then(response => {
+        if (response.ok) {
+          return response.json();
+        } else {
+          throw new Error(`Error en la solicitud PATCH: ${response.status} - ${response.statusText}`);
         }
-
-    }
+      })
+      .then(responseData => {
+        // Optionally handle response
+      })
+      .catch(error => {
+        console.error('Error en la solicitud PATCH:', error.message);
+      });
   }
 
+  delData = (e) => {
+    const idView = this.querySelector('#idView');
+    let id = idView.textContent;
+    deletebranches(id)
+      .then(response => {
+        if (response.ok) {
+          return response.json();
+        } else {
+          throw new Error(`Error en la solicitud DELETE: ${response.status} - ${response.statusText}`);
+        }
+      })
+      .then(responseData => {
+        this.resetIdView();
+        this.disableFrm(true);
+        this.ctrlBtn(e.target.dataset.ed);
+      })
+      .catch(error => {
+        console.error('Error en la solicitud DELETE:', error.message);
+      });
+  }
+
+  saveData = () => {
+    const frmRegistro = this.querySelector('#frmDataBranch');
+    this.querySelector('#btnGuardar').addEventListener("click", (e) => {
+      const datos = Object.fromEntries(new FormData(frmRegistro).entries());
+      postbranches(datos)
+        .then(response => {
+          if (response.ok) {
+            return response.json();
+          } else {
+            throw new Error(`Error en la solicitud POST: ${response.status} - ${response.statusText}`);
+          }
+        })
+        .then(responseData => {
+          this.viewData(responseData.id);
+        })
+        .catch(error => {
+          console.error('Error en la solicitud POST:', error.message);
+        });
+      this.ctrlBtn(e.target.dataset.ed);
+      e.stopImmediatePropagation();
+      e.preventDefault();
+    });
+  }
+
+  viewData = (id) => {
+    const idView = this.querySelector('#idView');
+    idView.innerHTML = id;
+  }
+
+  disableFrm = (estado) => {
+    const frmRegistro = this.querySelector('#frmDataBranch');
+    Object.entries(branchesModel).forEach(([key, value]) => {
+      if (frmRegistro.elements[key]) {
+        frmRegistro.elements[key].value = value;
+        frmRegistro.elements[key].disabled = estado;
+      }
+    });
+  }
 }
 
-customElements.define('lst-branches', lstbranches);
+customElements.define("reg-branches", RegBranches);

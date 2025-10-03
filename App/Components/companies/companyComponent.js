@@ -44,12 +44,16 @@ export class CompanyComponent extends HTMLElement {
       this.querySelectorAll('.nav-link').forEach(link => link.classList.remove('active'));
       this.querySelectorAll('div[id]').forEach(div => div.style.display = 'none');
 
-      document.querySelector(`[data-view="${viewId}"]`).classList.add('active');
-      document.querySelector(`#${viewId}`).style.display = 'block';
+      const activeLink = this.querySelector(`[data-view="${viewId}"]`);
+      if (activeLink) activeLink.classList.add('active');
+      const activeDiv = this.querySelector(`#${viewId}`);
+      if (activeDiv) activeDiv.style.display = 'block';
 
       if (refreshList) {
           const listComponent = this.querySelector('lst-companies');
-          listComponent.fetchCompanies();
+          if (listComponent && typeof listComponent.fetchCompanies === 'function') {
+              listComponent.fetchCompanies();
+          }
       }
   }
   

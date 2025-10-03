@@ -23,16 +23,16 @@ export class NavMenu extends HTMLElement{
                     <a class="nav-link active" aria-current="page" href="#" data-verocultar='["ct"]'>Branches</a>
                   </li>
                   <li class="nav-item">
-                    <a class="nav-link acitve" aria-current="page" href="#" data-verocultar='["cmp"]'>Companies</a>
+                    <a class="nav-link" aria-current="page" href="#" data-verocultar='["cmp"]'>Companies</a>
                   </li>
                   <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="#" data-verocultar='["cy"]'>Cities</a>
+                    <a class="nav-link" aria-current="page" href="#" data-verocultar='["cy"]'>Cities</a>
                   </li>
                   <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="#" data-verocultar='["r"]'>Regions</a>
+                    <a class="nav-link" aria-current="page" href="#" data-verocultar='["r"]'>Regions</a>
                   </li>
                   <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="#" data-verocultar='["co"]'>Countries</a>
+                    <a class="nav-link" aria-current="page" href="#" data-verocultar='["co"]'>Countries</a>
                   </li>
                   <li class="nav-item">
                     <a class="nav-link disabled" aria-current="page" aria-disabled="true">Disabled</a>
@@ -42,7 +42,7 @@ export class NavMenu extends HTMLElement{
             </div>
           </nav>        
         `;
-        this.querySelectorAll(".nav-link").forEach((val, id) => {
+        this.querySelectorAll(".nav-link").forEach((val) => {
           val.addEventListener("click", (e)=>{
               let data = JSON.parse(e.target.dataset.verocultar);
               let mainContent = document.querySelector('#mainContent');
