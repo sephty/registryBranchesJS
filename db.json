@@ -1,4 +1,14 @@
 {
+  "contactos": [
+    {
+      "id": 1,
+      "nombreContacto": "Juan",
+      "apellidoContacto": "Perez",
+      "nroCelular": "3109876543",
+      "emailContacto": " 22ek@gmail.com",
+      "nroResidencia": "Casa 101"
+    }
+  ],
   "countries": [
     {
       "id": 1,
@@ -39,6 +49,16 @@
       "phone": "3001234567",
       "cityID": 101,
       "companyID": 500
+    },
+    {
+      "numberCommercial": "1",
+      "address": "1",
+      "email": "1",
+      "contact_name": "1",
+      "phone": "1",
+      "cityID": "1",
+      "companyID": "1",
+      "id": 2
     }
   ],
   "contact": [
