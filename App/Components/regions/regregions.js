@@ -50,13 +50,15 @@ export class RegRegions extends HTMLElement {
       const data = Object.fromEntries(new FormData(form).entries());
       const id = this.querySelector('#id-view').textContent;
       try {
-        const response = id ? await patchRegions(data, id) : await postRegions({ ...regionModel, ...data });
-        if (response && response.ok) {
-            this.dispatchEvent(new CustomEvent('region-saved', { bubbles: true, composed: true }));
-            this.clearForm();
-        } else {
-             alert('No se pudo guardar la región.');
-        }
+          const response = id 
+              ? await patchRegions(data, id) 
+              : await postRegions({ ...regionModel, ...data });
+          if (response && response.ok) {
+              this.dispatchEvent(new CustomEvent('region-saved', { bubbles: true, composed: true }));
+              this.clearForm();
+          } else {
+              alert('No se pudo guardar la región.');
+          }
       } catch (error) {
           alert('Error de conexión al guardar.');
       }

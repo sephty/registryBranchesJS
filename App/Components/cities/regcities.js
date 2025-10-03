@@ -50,13 +50,15 @@ export class RegCities extends HTMLElement {
       const data = Object.fromEntries(new FormData(form).entries());
       const id = this.querySelector('#id-view').textContent;
       try {
-        const response = id ? await patchCities(data, id) : await postCities({ ...cityModel, ...data });
-        if (response && response.ok) {
-            this.dispatchEvent(new CustomEvent('city-saved', { bubbles: true, composed: true }));
-            this.clearForm();
-        } else {
-             alert('No se pudo guardar la ciudad.');
-        }
+          const response = id 
+              ? await patchCities(data, id) 
+              : await postCities({ ...cityModel, ...data });
+          if (response && response.ok) {
+              this.dispatchEvent(new CustomEvent('city-saved', { bubbles: true, composed: true }));
+              this.clearForm();
+          } else {
+              alert('No se pudo guardar la ciudad.');
+          }
       } catch (error) {
           alert('Error de conexión al guardar.');
       }

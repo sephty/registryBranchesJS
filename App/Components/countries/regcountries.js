@@ -43,16 +43,16 @@ export class RegCountries extends HTMLElement {
       const id = this.querySelector('#id-view').textContent;
 
       try {
-        const response = id
-            ? await patchCountries(data, id)
-            : await postCountries({ ...countryModel, ...data });
+          const response = id
+              ? await patchCountries(data, id)
+              : await postCountries({ ...countryModel, ...data });
 
-        if (response && response.ok) {
-            this.dispatchEvent(new CustomEvent('country-saved', { bubbles: true, composed: true }));
-            this.clearForm();
-        } else {
-            alert('No se pudo guardar el país.');
-        }
+          if (response && response.ok) {
+              this.dispatchEvent(new CustomEvent('country-saved', { bubbles: true, composed: true }));
+              this.clearForm();
+          } else {
+              alert('No se pudo guardar el país.');
+          }
       } catch (error) {
           console.error('Error de red:', error);
           alert('Error de conexión al guardar.');

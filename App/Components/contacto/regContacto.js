@@ -154,32 +154,28 @@ delData = () =>{
         // Puedes manejar el error de otra manera si es necesario
     });   
 }
-saveData = () =>{
-        const frmRegistro = document.querySelector('#frmDataContacto');
-        document.querySelector('#btnGuardar').addEventListener("click",(e) =>{
-            const datos = Object.fromEntries(new FormData(frmRegistro).entries());
-            postContacts(datos)
+saveData = () => {
+    const frmRegistro = document.querySelector('#frmDataContacto');
+    document.querySelector('#btnGuardar').addEventListener("click", (e) => {
+        const datos = Object.fromEntries(new FormData(frmRegistro).entries());
+        postContacts(datos)
             .then(response => {
-                // Verificar si la solicitud fue exitosa (código de respuesta en el rango 200)
                 if (response.ok) {
-                    return response.json(); // Devolver la respuesta como JSON
+                    return response.json();
                 } else {
-                    // Si la respuesta no fue exitosa, lanzar una excepción
                     throw new Error(`Error en la solicitud POST: ${response.status} - ${response.statusText}`);
                 }
             })
             .then(responseData => {
-                // Hacer algo con la respuesta exitosa si es necesario
                 this.viewData(responseData.id);
             })
             .catch(error => {
                 console.error('Error en la solicitud POST:', error.message);
-                // Puedes manejar el error de otra manera si es necesario
             });
-            this.ctrlBtn(e.target.dataset.ed);
-            e.stopImmediatePropagation();
-            e.preventDefault();
-        })
+        this.ctrlBtn(e.target.dataset.ed);
+        e.stopImmediatePropagation();
+        e.preventDefault();
+    });
 }
 viewData = (id)=>{
     const idView = document.querySelector('#idView');
