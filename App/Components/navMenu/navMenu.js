@@ -55,7 +55,7 @@ export class NavMenu extends HTMLElement{
                   mainContent.innerHTML="<branches-component></branches-component>"
                   break;
                 case 'cmp':
-                  mainContent.innerHTML="<p>companies-component</p>";
+                  mainContent.innerHTML="<lst-companies></lst-companies>";
                   break;
                 case 'cy':
                   mainContent.innerHTML="<p>city-component</p>";

@@ -1,4 +1,4 @@
-const URL_API = "https://68dc4c937cd1948060a9f5ba.mockapi.io/";
+const URL_API = "http://localhost:3000";
 const myHeaders = new Headers({
     "Content-Type": "application/json"
 });
