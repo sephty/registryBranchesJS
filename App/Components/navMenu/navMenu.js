@@ -20,22 +20,22 @@ export class NavMenu extends HTMLElement{
                     <a class="nav-link active" aria-current="page" href="#" data-verocultar='["c"]'>Contactos</a>
                   </li>
                   <li class="nav-item">
-                    <a class="nav-link" href="#" data-verocultar='["ct"]'>Branches</a>
+                    <a class="nav-link active" aria-current="page" href="#" data-verocultar='["ct"]'>Branches</a>
                   </li>
                   <li class="nav-item">
-                    <a class="nav-link" href="#" data-verocultar='["cmp"]'>Companies</a>
+                    <a class="nav-link acitve" aria-current="page" href="#" data-verocultar='["cmp"]'>Companies</a>
                   </li>
                   <li class="nav-item">
-                    <a class="nav-link" href="#" data-verocultar='["cy"]'>Cities</a>
+                    <a class="nav-link active" aria-current="page" href="#" data-verocultar='["cy"]'>Cities</a>
                   </li>
                   <li class="nav-item">
-                    <a class="nav-link" href="#" data-verocultar='["r"]'>Regions</a>
+                    <a class="nav-link active" aria-current="page" href="#" data-verocultar='["r"]'>Regions</a>
                   </li>
                   <li class="nav-item">
-                    <a class="nav-link" href="#" data-verocultar='["co"]'>Countries</a>
+                    <a class="nav-link active" aria-current="page" href="#" data-verocultar='["co"]'>Countries</a>
                   </li>
                   <li class="nav-item">
-                    <a class="nav-link disabled" aria-disabled="true">Disabled</a>
+                    <a class="nav-link disabled" aria-current="page" aria-disabled="true">Disabled</a>
                   </li>
                 </ul>
               </div>
@@ -52,7 +52,7 @@ export class NavMenu extends HTMLElement{
                   mainContent.innerHTML="<contacto-component></contacto-component>";
                   break;
                 case 'ct':
-                  mainContent.innerHTML="<branches-component></branches-component>"
+                  mainContent.innerHTML="<branches-component></branches-component>";
                   break;
                 case 'cmp':
                   mainContent.innerHTML="<company-component></company-component>";

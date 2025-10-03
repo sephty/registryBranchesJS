@@ -12,61 +12,57 @@ export class CountryComponent extends HTMLElement {
     this.innerHTML = /* html */ `
       <ul class="nav nav-tabs">
         <li class="nav-item">
-          <a class="nav-link class="card mt-3">
-        <div class="card-header">Listado de Regiones
-            <button class="btn btn-info btn-sm float-end" id="refresh-btn">Refrescar</button>
-        </div>
-        <div class="card-body">
-          <table class="table table-striped">
-            <thead><tr><th>ID</th><th>Nombre</th><th>País ID</th><th>Acciones</th></tr></thead>
-            <tbody id="region-list"></tbody>
-          </table>
-        </div>
-      </div>
+          <a class="nav-link active mnucountry" href="#" data-view="regcountries">Registrar País</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link mnucountry" href="#" data-view="lstcountries">Listado de Países</a>
+        </li>
+      </ul>
+      <div id="regcountries" style="display:block;"><reg-countries></reg-countries></div>
+      <div id="lstcountries" style="display:none;"><lst-countries></lst-countries></div>
     `;
-    this.querySelector('#refresh-btn').addEventListener('click', () => this.fetchRegions());
   }
 
-  renderTable() {
-    const tbody = this.querySelector('#region-list');
-    tbody.innerHTML = '';
-    this.regions.forEach(region => {
-        const row = document.createElement('tr');
-        row.dataset.id = region.id;
-        row.innerHTML = `
-            <td>${region.id}</td>
-            <td>${region.name || ''}</td>
-            <td>${region.CountryId || ''}</td>
-            <td>
-              <button class="btn btn-warning btn-sm edit-btn">Editar</button>
-              <button class="btn btn-danger btn-sm delete-btn">Eliminar</button>
-            </td>
-        `;
-        tbody.appendChild(row);
+  setupEventListeners() {
+    this.querySelectorAll(".mnucountry").forEach(link => {
+        link.addEventListener("click", (e) => this.handleTabClick(e));
     });
-    this.attachRowEvents();
+
+    this.addEventListener('country-saved', () => this.switchToListView(true));
+    this.addEventListener('edit-country', (e) => this.handleEditCountry(e));
   }
 
-  attachRowEvents() {
-    this.querySelectorAll('.edit-btn, .delete-btn').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-            const regionId = e.target.closest('tr').dataset.id;
-            if (e.target.classList.contains('edit-btn')) {
-                const region = this.regions.find(r => String(r.id) === regionId);
-                this.dispatchEvent(new CustomEvent('edit-region', { bubbles: true, composed: true, detail: region }));
-            } else if (e.target.classList.contains('delete-btn')) {
-                this.deleteRegion(regionId);
-            }
-        });
-    });
+  handleTabClick(e) {
+      e.preventDefault();
+      const viewId = e.target.dataset.view;
+      this.switchToView(viewId);
   }
+  
+  switchToView(viewId, refreshList = false) {
+      this.querySelectorAll('.nav-link').forEach(link => link.classList.remove('active'));
+      this.querySelectorAll('div[id]').forEach(div => div.style.display = 'none');
 
-  async deleteRegion(id) {
-      if (confirm(`¿Eliminar la región con ID ${id}?`)) {
-          const response = await deleteRegions(id);
-          if(response && response.ok) { this.fetchRegions(); }
-          else { alert("Error al eliminar la región."); }
+      document.querySelector(`[data-view="${viewId}"]`).classList.add('active');
+      document.querySelector(`#${viewId}`).style.display = 'block';
+
+      if (refreshList) {
+          const listComponent = this.querySelector('lst-countries');
+          if (listComponent) {
+            listComponent.fetchCountries();
+          }
       }
   }
+  
+  switchToListView(refresh = false) {
+      this.switchToView('lstcountries', refresh);
+  }
+
+  handleEditCountry(event) {
+    const companyToEdit = event.detail;
+    this.switchToView('regcountries');
+    const regComponent = this.querySelector('reg-countries');
+    regComponent.loadDataForEdit(companyToEdit);
+  }
 }
-customElements.define('lst-regions', LstRegions);
+
+customElements.define("country-component", CountryComponent);
